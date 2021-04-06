@@ -1,5 +1,5 @@
 function djb2(req, res, next) {
-  let str = req.body.url;
+  let str = req.body.URL;
   let len = str.length;
   let h = 5381;
 

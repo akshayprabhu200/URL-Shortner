@@ -1,5 +1,6 @@
 import "./form.css";
 import React, { useState } from "react";
+import axios from "axios";
 
 export default function Decode() {
   const initialFormData = Object.freeze({
@@ -8,6 +9,7 @@ export default function Decode() {
   });
 
   const [formHashData, updateFormData] = useState(initialFormData);
+  const [decoded, setDecoded] = useState("");
 
   const handleHashChange = (e) => {
     updateFormData({
@@ -19,6 +21,13 @@ export default function Decode() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    axios
+      .get(`http://localhost:5000/api/decodeHash/${formHashData.hashedURL}`)
+      .then((res) => {
+        console.log(res);
+        setDecoded(res.data.URL);
+      })
+      .catch((error) => setDecoded("ERROR: URL Not Found!"));
   };
   return (
     <div>
@@ -33,6 +42,9 @@ export default function Decode() {
         </div>
         <div>
           <button onClick={handleSubmit}>Decode</button>
+        </div>
+        <div>
+          <h3>Decoded URL:{decoded}</h3>
         </div>
       </form>
     </div>

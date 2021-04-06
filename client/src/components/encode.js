@@ -1,5 +1,6 @@
 import "./form.css";
 import React, { useState } from "react";
+import axios from "axios";
 
 export default function Encode() {
   const initialFormData = Object.freeze({
@@ -8,6 +9,7 @@ export default function Encode() {
   });
 
   const [formURLData, updateFormData] = useState(initialFormData);
+  const [encoded, setEncoded] = useState("");
 
   const handleURLChange = (e) => {
     updateFormData({
@@ -19,6 +21,10 @@ export default function Encode() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    axios
+      .post("http://localhost:5000/api/generateHash/", formURLData)
+      .then((res) => setEncoded(res.data.hashedURL))
+      .catch((error) => setEncoded("ERROR: Please try again!"));
   };
   return (
     <div>
@@ -29,6 +35,9 @@ export default function Encode() {
         </div>
         <div>
           <button onClick={handleSubmit}>Encode</button>
+        </div>
+        <div>
+          <h3>Encoded URL: {encoded}</h3>
         </div>
       </form>
     </div>

@@ -11,12 +11,14 @@ app.use(
   })
 );
 
+app.use(express.json());
+
 const hashTable = {};
 
 app.use("/api/generateHash", hash.djb2);
 
 app.post("/api/generateHash", (req, res) => {
-  let url = req.body.url;
+  let url = req.body.URL;
   let hashedURL = req.body.hashedURL;
   hashTable[hashedURL] = url;
   return res.status(201).json({ URL: url, hashedURL: hashedURL });
@@ -24,8 +26,7 @@ app.post("/api/generateHash", (req, res) => {
 
 app.get("/api/decodeHash/:hashedURL", (req, res) => {
   let hashedURL = req.params.hashedURL;
-  console.log(hashedURL);
-  console.log(hashTable[hashedURL]);
+
   if (hashedURL in hashTable) {
     return res
       .status(200)
